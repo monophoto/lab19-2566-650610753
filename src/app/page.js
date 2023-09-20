@@ -36,10 +36,12 @@ export default function Home() {
   };
 
   const loadMyCourses = async () => {
+    setLoadingMyCourses(true);
     const resp = await axios.get("/api/enrollment", {
       headers: { Authorization: `Bearer ${token}` },
     });
     setMyCourses(resp.data.courses);
+    setLoadingMyCourses(false);
   };
 
   useEffect(() => {
@@ -54,11 +56,13 @@ export default function Home() {
 
   const login = async () => {
     try {
+      setLoadingLogin(true);
       const resp = await axios.post("/api/user/login", { username, password });
       setToken(resp.data.token);
       setAuthenUsername(resp.data.username);
       setUsername("");
       setPassword("");
+      setLoadingLogin(false);
     } catch (error) {
       if (error.response.data) {
         alert(error.response.data.message);
@@ -105,7 +109,9 @@ export default function Home() {
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
               />
-              <Button onClick={login}>Login</Button>
+              <Button onClick={login} disabled={loadingLogin}>
+                {loadingLogin ? "Login..." : "Login"}
+              </Button>
             </Group>
           )}
           {authenUsername && (
@@ -121,7 +127,7 @@ export default function Home() {
         {/* enrollment section */}
         <Paper withBorder p="md">
           <Title order={4}>My courses</Title>
-          {!authenUsername && (
+          {!authenUsername && !loadingMyCourses && (
             <Text color="dimmed">Please login to see your course(s)</Text>
           )}
           {authenUsername &&
@@ -133,9 +139,13 @@ export default function Home() {
             ))}
 
           {/* Do something with below loader!! */}
-          <Loader variant="dots" />
+          {loadingMyCourses && !myCourses && <Loader variant="dots" />}
         </Paper>
-        <Footer year="2023" fullName="Chayanin Suatap" studentId="650610560" />
+        <Footer
+          year="2023"
+          fullName="Jetsadawut Papherata"
+          studentId="650610753"
+        />
       </Stack>
     </Container>
   );
