@@ -127,7 +127,7 @@ export default function Home() {
         {/* enrollment section */}
         <Paper withBorder p="md">
           <Title order={4}>My courses</Title>
-          {!authenUsername && !loadingMyCourses && (
+          {!authenUsername && (
             <Text color="dimmed">Please login to see your course(s)</Text>
           )}
           {authenUsername &&
